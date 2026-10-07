@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation, useQuery } from '@apollo/client/react'
 import { get } from 'lodash'
-import { ExternalLink, Trash2 } from 'lucide-react'
+import { Link2, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DisplayAvatar } from '@/components/DisplayAvatar'
 import CommentReactions from '@/components/Comment/CommentReactions'
@@ -346,7 +346,7 @@ export default function PostActionCard({
               className="h-7 w-7 text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50"
               aria-label="Copy link"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
+              <Link2 className="h-3.5 w-3.5" />
             </Button>
             {isOwner && (
               <Button

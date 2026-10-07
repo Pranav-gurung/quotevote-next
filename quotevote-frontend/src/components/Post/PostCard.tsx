@@ -394,18 +394,18 @@ function PostCardComponent({
               </span>
             )}
                           {citationUrl && (
-                  <a
-                    href={citationUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`Open source ${getDomain(citationUrl)} in a new tab`}
-                    className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1976d2] bg-[rgba(25,118,210,0.08)] border border-[rgba(25,118,210,0.2)] px-2 py-0.5 rounded-full hover:bg-[rgba(25,118,210,0.18)] transition-colors"
-                  >
-                    <span>Source: {getDomain(citationUrl)}</span>
-                    <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
-                  </a>
-                )}
+              <a
+                href={citationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                aria-label={`Source: ${getDomain(citationUrl)} (opens in a new tab)`}
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1976d2] bg-[rgba(25,118,210,0.08)] border border-[rgba(25,118,210,0.2)] px-2 py-0.5 rounded-full hover:bg-[rgba(25,118,210,0.18)] transition-colors"
+              >
+                <span>Source: {getDomain(citationUrl)}</span>
+                <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
+              </a>
+            )}
             {compact && attribution ? (
               <span className="text-xs italic text-muted-foreground">— {attribution}</span>
             ) : null}
