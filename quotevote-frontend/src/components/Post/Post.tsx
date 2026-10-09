@@ -8,7 +8,7 @@ import { useMutation, useQuery } from "@apollo/client/react";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import type { Reference } from "@apollo/client";
 import { Button } from "@/components/ui/button";
-import { Link2, ExternalLink, Ban, Trash2, Hash } from "lucide-react";
+import { Link2, ExternalLink, Ban, Trash2, Hash ,MessageCircle, MoreHorizontal /* ... other icons */ } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,7 +41,7 @@ import VotingBoard from "@/components/VotingComponents/VotingBoard";
 const VotingPopup = lazy(() => import("@/components/VotingComponents/VotingPopup"));
 import type { PostVote, PostProps } from "@/types/post";
 import type { SelectedText, UserVote, VoteType, VoteOption } from "@/types/voting";
-import { MessageCircle, MoreHorizontal /* ... other icons */ } from "lucide-react";
+
 
 type VoteStateMutationPost = {
   _id: string;
@@ -554,9 +554,7 @@ export default function Post({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
               <DropdownMenuItem onClick={handleCopy}>
-                <DropdownMenuItem onClick={handleCopy}>
                   <Link2 className="size-4 mr-2" /> Copy link
-                </DropdownMenuItem>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleReport}
