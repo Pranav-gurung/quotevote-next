@@ -9,9 +9,11 @@ const createContext = () => ({
       findUnique: jest.fn(),
       findFirst: jest.fn(),
       findMany: jest.fn(),
+      update: jest.fn(),
     },
     message: {
       findMany: jest.fn(),
+      create: jest.fn(),
     },
     reaction: {
       findMany: jest.fn(),
@@ -20,6 +22,10 @@ const createContext = () => ({
       findUnique: jest.fn(),
     },
   },
+  pubsub: {
+    publish: jest.fn(),
+  },
+  user: { _id: 'user-1', username: 'alice', name: 'Alice' },
 });
 
 describe('chatResolver Prisma queries', () => {

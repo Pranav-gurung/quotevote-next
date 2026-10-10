@@ -8,9 +8,10 @@ import dotenv from 'dotenv';
 import { schema } from './data/schema';
 import type { GraphQLContext } from './types/graphql';
 import { createHttpContext } from './context';
-import { disconnectPrisma } from './lib/prisma';
+import { disconnectPrisma, prisma } from './lib/prisma';
 import { startPresenceCleanup } from './data/utils/presence/cleanupStalePresence';
 import * as auth from './data/utils/authentication';
+import { createSubscriptionServer } from './subscriptions';
 
 // Load environment variables
 dotenv.config();
@@ -33,7 +34,7 @@ async function startServer() {
   }
 
   // Start Presence Cleanup Job
-  startPresenceCleanup();
+  startPresenceCleanup(prisma);
 
   // 2. Apollo Server Setup (v4/v5 Syntax)
   const server = new ApolloServer<GraphQLContext>({
@@ -41,6 +42,7 @@ async function startServer() {
   });
 
   await server.start();
+  const subscriptionServer = createSubscriptionServer(httpServer, { schema });
 
   // 3. Middleware & Routes Integration
   app.use(
@@ -86,6 +88,7 @@ async function startServer() {
       console.error('Error stopping Apollo Server:', err);
     }
 
+    await subscriptionServer.dispose();
     httpServer.close();
 
     // Disconnect database clients in parallel — allSettled ensures one

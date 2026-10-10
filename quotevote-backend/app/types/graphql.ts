@@ -168,7 +168,11 @@ export interface QueryResolvers {
 
   // Tag queries
   tag: ResolverFn<Common.Tag | null, unknown, { tagId: string }>;
-  tags: ResolverFn<Common.Tag[], unknown, { limit: number }>;
+  tags: ResolverFn<
+    Common.Tag[],
+    unknown,
+    { limit?: number; created?: string; key?: string; title?: string }
+  >;
 
   // Activity queries
   activities: ResolverFn<Common.PaginatedResult<Common.Activity>, unknown, ActivityQueryArgs>;
@@ -345,7 +349,6 @@ export interface SubscriptionResolvers {
   notification: SubscriptionResolver<Common.Notification, { userId: string }>;
   message: SubscriptionResolver<Common.Message, { messageRoomId: string }>;
   typing: SubscriptionResolver<TypingPayload, { messageRoomId: string }>;
-  roster: SubscriptionResolver<RosterPayload, { userId: string }>;
 }
 
 /**
@@ -465,17 +468,6 @@ export interface TypingPayload {
   timestamp: number;
 }
 
-export interface RosterPayload {
-  _id: string;
-  userId: string;
-  buddyId: string;
-  status: Common.RosterStatus;
-  initiatedBy?: string;
-  created: Date | string;
-  updated?: Date | string;
-  buddy?: Common.User;
-}
-
 // ============================================================================
 // Mutation Results
 // ============================================================================
@@ -516,7 +508,6 @@ export const SUBSCRIPTION_EVENTS = {
   MESSAGE_UPDATED: 'MESSAGE_UPDATED',
   MESSAGE_DELETED: 'MESSAGE_DELETED',
   TYPING_UPDATED: 'TYPING_UPDATED',
-  ROSTER_UPDATED: 'ROSTER_UPDATED',
   POST_CREATED: 'POST_CREATED',
   POST_UPDATED: 'POST_UPDATED',
   POST_DELETED: 'POST_DELETED',

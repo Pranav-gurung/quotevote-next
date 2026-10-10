@@ -11,7 +11,7 @@
 
 import type { Request, Response } from 'express';
 import { GraphQLError } from 'graphql';
-import type { GraphQLContext, PubSub } from './types/graphql';
+import type { GraphQLContext, PubSub, WsGraphQLContext } from './types/graphql';
 import { prisma as defaultPrisma } from './lib/prisma';
 import { pubsub as defaultPubsub } from './data/utils/pubsub';
 import { requireAuth } from './data/utils/requireAuth';
@@ -28,6 +28,63 @@ export interface ContextFactoryOptions {
   prisma?: GraphQLContext['prisma'];
   /** Override the default PubSub instance */
   pubsub?: PubSub;
+}
+
+export interface WsContextFactoryOptions {
+  prisma?: GraphQLContext['prisma'];
+  pubsub?: PubSub;
+}
+
+async function loadUserFromToken(
+  token: string,
+  prisma: GraphQLContext['prisma']
+): Promise<Common.User | null> {
+  try {
+    const decoded = await auth.verifyToken(token);
+    if (!decoded || typeof decoded !== 'object' || !decoded.userId) return null;
+
+    const prismaUser = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        name: true,
+        avatar: true,
+        bio: true,
+        isAdmin: true,
+        accountStatus: true,
+        followingIds: true,
+        followerIds: true,
+        reputation: true,
+      },
+    });
+
+    return prismaUser ? toPublicUser(prismaUser as PrismaUserRecord) : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function createWsContext(
+  connectionParams: Record<string, unknown> | undefined,
+  options?: WsContextFactoryOptions
+): Promise<WsGraphQLContext> {
+  const prisma = options?.prisma ?? defaultPrisma;
+  const pubsub = options?.pubsub ?? defaultPubsub;
+  const rawToken =
+    connectionParams?.authToken ?? connectionParams?.authorization ?? connectionParams?.token;
+  const token = typeof rawToken === 'string' ? rawToken.replace(/^Bearer\s+/i, '') : undefined;
+  const user = token ? await loadUserFromToken(token, prisma) : null;
+
+  return {
+    prisma,
+    user,
+    userId: user?._id?.toString() ?? null,
+    pubsub,
+    requestId: crypto.randomUUID(),
+    connectionParams,
+  };
 }
 
 /**
@@ -53,42 +110,13 @@ export async function createHttpContext(
   const pubsub = options?.pubsub ?? defaultPubsub;
 
   const token = req.headers.authorization?.split(' ')[1];
-  let user: Common.User | null = null;
+  const user = token ? await loadUserFromToken(token, prisma) : null;
 
   // Generate requestId from header or crypto
   const requestId = (req.headers['x-request-id'] as string | undefined) ?? crypto.randomUUID();
 
   // Check if this is an introspection query (GraphQL Playground/IDE)
   const isIntrospection = req.body?.operationName === 'IntrospectionQuery';
-
-  if (token) {
-    try {
-      const decoded = await auth.verifyToken(token);
-      if (decoded && typeof decoded === 'object' && decoded.userId) {
-        const prismaUser = await prisma.user.findUnique({
-          where: { id: decoded.userId },
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            name: true,
-            avatar: true,
-            bio: true,
-            isAdmin: true,
-            accountStatus: true,
-            followingIds: true,
-            followerIds: true,
-            reputation: true,
-          },
-        });
-        if (prismaUser) {
-          user = toPublicUser(prismaUser as PrismaUserRecord);
-        }
-      }
-    } catch {
-      // Token invalid or expired, proceed as unauthenticated
-    }
-  }
 
   // Check if query requires authentication (skip for introspection)
   if (!isIntrospection) {

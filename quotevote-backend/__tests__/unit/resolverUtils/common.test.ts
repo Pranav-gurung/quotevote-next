@@ -2,7 +2,7 @@
  * Test suite for common resolver utilities.
  */
 
-import { uniqueArrayObjects } from '~/data/resolvers/utils/common';
+import { uniqueArrayObjects, isObjectId } from '~/data/resolvers/utils/common';
 
 describe('common resolver utilities', () => {
   describe('uniqueArrayObjects', () => {
@@ -38,6 +38,21 @@ describe('common resolver utilities', () => {
 
     it('should handle single-element array', () => {
       expect(uniqueArrayObjects([42])).toEqual([42]);
+    });
+  });
+
+  describe('isObjectId', () => {
+    it('returns true for valid 24-character hex strings', () => {
+      expect(isObjectId('507f1f77bcf86cd799439011')).toBe(true);
+      expect(isObjectId('000000000000000000000000')).toBe(true);
+    });
+
+    it('returns false for invalid ObjectId strings', () => {
+      expect(isObjectId('')).toBe(false);
+      expect(isObjectId('invalid')).toBe(false);
+      expect(isObjectId('507f1f77bcf86cd79943901')).toBe(false); // 23 chars
+      expect(isObjectId('507f1f77bcf86cd7994390111')).toBe(false); // 25 chars
+      expect(isObjectId('507f1f77bcf86cd79943901z')).toBe(false); // non-hex
     });
   });
 });

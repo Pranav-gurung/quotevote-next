@@ -89,7 +89,7 @@ function createWsLink(): GraphQLWsLink | null {
     return null;
   }
 
-  // Local backend has no subscription transport — avoid noisy reconnect loops.
+  // Local and hosted backends both expose the GraphQL WebSocket transport.
   if (!areGraphqlSubscriptionsEnabled()) {
     return null;
   }

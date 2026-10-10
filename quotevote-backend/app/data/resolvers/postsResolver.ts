@@ -3,14 +3,9 @@ import { Prisma } from '@prisma/client';
 import { POST_RECORD_SELECT } from '~/data/utils/postPrismaMapper';
 import { parseSearchQuery } from '../utils/parseSearchQuery';
 import { attachPostCreators } from './utils/posts';
+import { isObjectId } from './utils/common';
 import type { GraphQLContext, PostQueryArgs } from '~/types/graphql';
 import type * as Common from '~/types/common';
-
-const OBJECT_ID_PATTERN = /^[a-fA-F0-9]{24}$/;
-
-function isObjectId(id: string): boolean {
-  return OBJECT_ID_PATTERN.test(id);
-}
 
 /**
  * Build a Prisma where/orderBy from PostQueryArgs.

@@ -1,7 +1,7 @@
 // Resolver Utilities
 // Migrated from legacy JavaScript to TypeScript (issue 7.17)
 
-export { uniqueArrayObjects } from './common';
+export { uniqueArrayObjects, isObjectId, OBJECT_ID_PATTERN } from './common';
 export { logActivity } from './activities';
 export type { ActivityIds } from './activities';
 export { addNotification } from './notifications';

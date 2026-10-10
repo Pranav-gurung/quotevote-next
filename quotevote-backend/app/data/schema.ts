@@ -17,6 +17,7 @@ import { activityResolver } from './resolvers/activityResolver';
 import { heartbeatResolver } from './resolvers/heartbeatResolver';
 import { typingResolver } from './resolvers/typingResolver';
 import { reactionResolver } from './resolvers/reactionResolver';
+import { subscriptionResolver } from './resolvers/subscriptionResolver';
 
 export const schema = makeExecutableSchema({
   typeDefs,
@@ -45,5 +46,6 @@ export const schema = makeExecutableSchema({
     heartbeatResolver,
     typingResolver,
     reactionResolver,
+    subscriptionResolver,
   ],
 });
