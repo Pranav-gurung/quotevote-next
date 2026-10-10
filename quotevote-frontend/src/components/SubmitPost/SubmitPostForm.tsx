@@ -34,7 +34,7 @@ import { ATTRIBUTION_MAX_LENGTH } from "@/lib/constants/attribution";
 import { SUBMIT_POST_TITLE_MAX_LENGTH } from "@/lib/constants/submitPost";
 import { CREATE_GROUP, SUBMIT_POST } from "@/graphql/mutations";
 import { GROUPS_QUERY } from "@/graphql/queries";
-import type { SubmitPostFormProps } from "@/types/components";
+import  { SubmitPostFormProps } from "@/types/components";
 import { cn } from "@/lib/utils";
 
 function CharacterCount({ current, max }: { current: number; max: number }) {

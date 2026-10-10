@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 /**
  * Presence subscription - subscribes to user presence updates
@@ -13,7 +13,7 @@ export const PRESENCE_SUBSCRIPTION = gql`
       lastSeen
     }
   }
-`
+`;
 
 /**
  * New notification subscription - subscribes to notifications including post updates
@@ -38,7 +38,7 @@ export const NEW_NOTIFICATION_SUBSCRIPTION = gql`
       }
     }
   }
-`
+`;
 
 /**
  * New message subscription - subscribes to new messages in a message room
@@ -57,7 +57,7 @@ export const NEW_MESSAGE_SUBSCRIPTION = gql`
       mutation_type
     }
   }
-`
+`;
 
 /**
  * Typing subscription - subscribes to typing events in a message room
@@ -76,7 +76,7 @@ export const TYPING_SUBSCRIPTION = gql`
       timestamp
     }
   }
-`
+`;
 
 /**
  * Roster subscription - subscribes to roster (buddy list) updates
@@ -99,4 +99,4 @@ export const ROSTER_SUBSCRIPTION = gql`
       }
     }
   }
-`
+`;
